@@ -52,9 +52,8 @@ void is_victory(int pole[3][3], bool & result, int is_cross) {//Проверка
 	}
 }
 
-void bot(int pole[3][3], int y, int x, int zero, int cross) {
+double count_crosses(int pole[3][3], int x, int y, int cross) {
 	int  quantity = 0;
-	//Кoличество крестиков на поле
 	for (y = 0; y < 3; y++) {
 		for (x = 0; x < 3; x++) {
 			if (pole[y][x] == cross) {
@@ -62,8 +61,12 @@ void bot(int pole[3][3], int y, int x, int zero, int cross) {
 			}
 		}
 	}
+	return quantity;
+}
+
+void bot(int pole[3][3], int y, int x, int zero, int cross) {
 	//Сколько крестиков, такой и ход
-	if (quantity == 1) {
+	if (count_crosses(pole, x, y, cross) == 1) {
 		if (pole[1][1] != cross) {
 			pole[1][1] = zero;
 		}
@@ -71,7 +74,7 @@ void bot(int pole[3][3], int y, int x, int zero, int cross) {
 			pole[0][0] = zero;
 		}
 	}
-	if (quantity > 1 && quantity < 6) {
+	if (count_crosses(pole, x, y, cross) > 1 && count_crosses(pole, x, y, cross) < 6) {
 		for (y = 0; y < 3; y++) {//Строки
 			if (pole[y][0] == cross && pole[y][1] == cross) {
 				pole[y][2] = zero;

@@ -143,7 +143,7 @@ void bot(int pole[3][3], int y, int x, int zero, int cross) {
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(970, 670), "tic-tac-toe");
+RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 	///////////////ФОН///////////////
 	Image fonimage;
 	fonimage.loadFromFile("2.jpg");
@@ -158,39 +158,31 @@ int main()
 	heroimage.loadFromFile("3.png");
 	Texture herotexture;
 	herotexture.loadFromImage(heroimage);
-	Sprite cell1;
+	Sprite cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9;
 	cell1.setTexture(herotexture);
 	cell1.setTextureRect(IntRect(0, 0, 190, 190));
 	cell1.setPosition(60, 60);
-	Sprite cell2;
 	cell2.setTexture(herotexture);
 	cell2.setTextureRect(IntRect(0, 0, 190, 190));
 	cell2.setPosition(60, 260);
-	Sprite cell3;
 	cell3.setTexture(herotexture);
 	cell3.setTextureRect(IntRect(0, 0, 190, 190));
 	cell3.setPosition(60, 460);
-	Sprite cell4;
 	cell4.setTexture(herotexture);
 	cell4.setTextureRect(IntRect(0, 0, 190, 190));
 	cell4.setPosition(260, 60);
-	Sprite cell5;
 	cell5.setTexture(herotexture);
 	cell5.setTextureRect(IntRect(0, 0, 190, 190));
 	cell5.setPosition(260, 260);
-	Sprite cell6;
 	cell6.setTexture(herotexture);
 	cell6.setTextureRect(IntRect(0, 0, 190, 190));
 	cell6.setPosition(260, 460);
-	Sprite cell7;
 	cell7.setTexture(herotexture);
 	cell7.setTextureRect(IntRect(0, 0, 190, 190));
 	cell7.setPosition(460, 60);
-	Sprite cell8;
 	cell8.setTexture(herotexture);
 	cell8.setTextureRect(IntRect(0, 0, 190, 190));
 	cell8.setPosition(460, 260);
-	Sprite cell9;
 	cell9.setTexture(herotexture);
 	cell9.setTextureRect(IntRect(0, 0, 190, 190));
 	cell9.setPosition(460, 460);
@@ -199,44 +191,23 @@ int main()
 	button.loadFromFile("Button.png");
 	Texture buttontexture;
 	buttontexture.loadFromImage(button);
-	Sprite button1;
+	Sprite button1, button3;
 	button1.setTexture(buttontexture);
 	button1.setTextureRect(IntRect(0, 0, 220, 70));
 	button1.setPosition(700, 210);
-	Sprite button3;
 	button3.setTexture(buttontexture);
 	button3.setTextureRect(IntRect(0, 0, 220, 70));
 	button3.setPosition(700, 290);
 	///////////////НОЛИКИ И КРЕСТИКИ///////////////
-	Image zeroimage;
+	Image zeroimage, crossimage;
+	Texture zerotexture, crosstexture;
 	zeroimage.loadFromFile("1.png");
-	Texture zerotexture;
 	zerotexture.loadFromImage(zeroimage);
-
-	Image crossimage;
 	crossimage.loadFromFile("clover.png");
-	Texture crosstexture;
 	crosstexture.loadFromImage(crossimage);
 
-	Sprite crosssprite;
-	Sprite crosssprite2;
-	Sprite crosssprite3;
-	Sprite crosssprite4;
-	Sprite crosssprite5;
-	Sprite crosssprite6;
-	Sprite crosssprite7;
-	Sprite crosssprite8;
-	Sprite crosssprite9;
-
-	Sprite zerosprite;
-	Sprite zerosprite2;
-	Sprite zerosprite3;
-	Sprite zerosprite4;
-	Sprite zerosprite5;
-	Sprite zerosprite6;
-	Sprite zerosprite7;
-	Sprite zerosprite8;
-	Sprite zerosprite9;
+	Sprite crosssprite, crosssprite2, crosssprite3, crosssprite4, crosssprite5, crosssprite6, crosssprite7, crosssprite8, crosssprite9;
+	Sprite zerosprite, zerosprite2, zerosprite3, zerosprite4, zerosprite5, zerosprite6, zerosprite7, zerosprite8, zerosprite9;
 	///////////////ТЕКСТ///////////////
 	Font font;
 	font.loadFromFile("CyrilicOld.ttf");
@@ -255,16 +226,9 @@ int main()
 	string2.setStyle(Text::Bold);
 	string2.setPosition(70, 250);
 
-	bool isMove = false;//флаг для щелчка мыши по спрайту
-	bool cross_move = true;
-	bool victory = false;
-	bool is_pravila = false;
-	bool you_win = false;
-	bool you_loss = false;
+	bool isMove = false, cross_move = true, victory = false, you_win = false, you_loss = false;
 	int pole[3][3] = { { 0,0,0 },{ 0, 0, 0 },{ 0, 0, 0 } };
-	int i, X, Y, x, y;
-	i = 0, X = 0, Y = 0;
-	int cross = 1, zero = 2;
+	int i = 0, X = 0, Y = 0, x, y, cross = 1, zero = 2;
 
 	while (window.isOpen()) {
 		Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсорa
@@ -275,67 +239,67 @@ int main()
 			///////////////ВЫВОД НОЛИКОВ И КРЕСТИКОВ В КВАДРАТИКИ///////////////
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (event.key.code == sf::Mouse::Left) {
-								if (60 < pixelPos.x && pixelPos.x < 650 && 60 < pixelPos.y && pixelPos.y < 650)//Работа в игровом поле
-									if (60 < pixelPos.x && pixelPos.x < 250){//1 проверка по x
-										if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
-											if (pole[0][0] == 0){
-												pole[0][0] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y
-											if (pole[1][0] == 0){
-												pole[1][0] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
-											if (pole[2][0] == 0){
-												pole[2][0] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-									}
-									else if (260 < pixelPos.x && pixelPos.x < 450){//2 проверка по x
-										if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
-											if (pole[0][1] == 0){
-												pole[0][1] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y
-											if (pole[1][1] == 0){
-												pole[1][1] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
-											if (pole[2][1] == 0){
-												pole[2][1] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-									}
-									else if (460 < pixelPos.x && pixelPos.x < 650){//3 проверка по x
-										if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
-											if (pole[0][2] == 0){
-												pole[0][2] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y 
-											if (pole[1][2] == 0){
-												pole[1][2] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-										else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
-											if (pole[2][2] == 0){
-												pole[2][2] = cross;
-												bot(pole, X, Y, zero, cross);
-											}
-										}
-									}
+					if (60 < pixelPos.x && pixelPos.x < 650 && 60 < pixelPos.y && pixelPos.y < 650)//Работа в игровом поле
+						if (60 < pixelPos.x && pixelPos.x < 250) {//1 проверка по x
+							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
+								if (pole[0][0] == 0) {
+									pole[0][0] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y
+								if (pole[1][0] == 0) {
+									pole[1][0] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
+								if (pole[2][0] == 0) {
+									pole[2][0] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+						}
+						else if (260 < pixelPos.x && pixelPos.x < 450) {//2 проверка по x
+							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
+								if (pole[0][1] == 0) {
+									pole[0][1] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y
+								if (pole[1][1] == 0) {
+									pole[1][1] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
+								if (pole[2][1] == 0) {
+									pole[2][1] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+						}
+						else if (460 < pixelPos.x && pixelPos.x < 650) {//3 проверка по x
+							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
+								if (pole[0][2] == 0) {
+									pole[0][2] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y 
+								if (pole[1][2] == 0) {
+									pole[1][2] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
+								if (pole[2][2] == 0) {
+									pole[2][2] = cross;
+									bot(pole, X, Y, zero, cross);
+								}
+							}
+						}
 				}
 			}
 			///////////////ДЕЙСТВИЯ КНОПОК///////////////

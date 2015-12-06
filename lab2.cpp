@@ -1,9 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
-
 //Kirienko Tatiana PS_22
-
 using namespace sf;//включаем пространство имен sf, чтобы постоянно не писать sf::
 
 void is_victory(int pole[3][3], bool & result, int is_cross) {//Проверка на победу
@@ -64,8 +62,52 @@ double count_crosses(int pole[3][3], int x, int y, int cross) {
 	return quantity;
 }
 
-void bot(int pole[3][3], int y, int x, int zero, int cross) {
-	//Сколько крестиков, такой и ход
+void special_cases(int pole[3][3], int zero, int cross) {
+
+	if (pole[1][1] == zero) {//Частные случаи
+		if (pole[0][1] == cross && pole[1][2] == cross && pole[0][2] == 0) {
+			pole[0][2] = zero;
+		}
+		else if (pole[2][1] == cross && pole[1][2] == cross && pole[2][2] == 0) {
+			pole[2][2] = zero;
+		}
+		else if (pole[2][1] == cross && pole[1][0] == cross && pole[2][0] == 0) {
+			pole[2][0] = zero;
+		}
+		else if (pole[0][1] == cross && pole[1][0] == cross && pole[0][0] == 0) {
+			pole[0][0] = zero;
+		}
+		else if (pole[2][0] == cross && pole[0][2] == cross && pole[2][1] == 0) {
+			pole[0][1] = zero;
+		}
+		else if (pole[0][0] == cross && pole[2][2] == cross && pole[1][2] == 0) {
+			pole[1][0] = zero;;
+		}
+		else if (pole[0][1] == cross && pole[2][1] == cross && pole[2][0] == 0) {
+			pole[0][2] = zero;
+		}
+		else if (pole[1][0] == cross && pole[1][2] == cross && pole[0][0] == 0) {
+			pole[2][2] = zero;
+		}
+	}
+	else {
+		if (pole[0][2] == cross || pole[2][2] == cross) {//Частные случаи
+			if (pole[2][0] != 0) {
+				pole[0][0] = zero;
+			}
+			else {
+				pole[2][0] = zero;
+			}
+		}
+		else if (pole[2][0] == cross) {
+			pole[0][2] = zero;
+		}
+	}
+
+}
+
+void setting_noughts_and_crosses(int pole[3][3], int y, int x, int zero, int cross) {
+
 	if (count_crosses(pole, x, y, cross) == 1) {
 		if (pole[1][1] != cross) {
 			pole[1][1] = zero;
@@ -97,53 +139,13 @@ void bot(int pole[3][3], int y, int x, int zero, int cross) {
 				pole[1][x] = zero;
 			}
 		}
-		if (pole[1][1] == zero) {//Частные случаи
-			if (pole[0][1] == cross && pole[1][2] == cross && pole[0][2] == 0) {
-				pole[0][2] = zero;
-			}
-			else if (pole[2][1] == cross && pole[1][2] == cross && pole[2][2] == 0) {
-				pole[2][2] = zero;
-			}
-			else if (pole[2][1] == cross && pole[1][0] == cross && pole[2][0] == 0) {
-				pole[2][0] = zero;
-			}
-			else if (pole[0][1] == cross && pole[1][0] == cross && pole[0][0] == 0) {
-				pole[0][0] = zero;
-			}
-			else if (pole[2][0] == cross && pole[0][2] == cross && pole[2][1] == 0) {
-				pole[0][1] = zero;
-			}
-			else if (pole[0][0] == cross && pole[2][2] == cross && pole[1][2] == 0) {
-				pole[1][0] = zero;
-			}
-			else if (pole[0][1] == cross && pole[2][1] == cross && pole[2][0] == 0) {
-				pole[0][2] = zero;
-			}
-			else if (pole[1][0] == cross && pole[1][2] == cross && pole[0][0] == 0) {
-				pole[2][2] = zero;
-			}
-		}
-
-		else {
-			if (pole[0][2] == cross || pole[2][2] == cross) {//Частные случаи
-				if (pole[2][0] != 0) {
-					pole[0][0] = zero;
-				}
-				else {
-					pole[2][0] = zero;
-				}
-			}
-			else if (pole[2][0] == cross) {
-				pole[0][2] = zero;
-			}
-		}
+		special_cases(pole, zero, cross);
 	}
 }
 
-
 int main()
 {
-RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
+	RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 	///////////////ФОН///////////////
 	Image fonimage;
 	fonimage.loadFromFile("2.jpg");
@@ -205,10 +207,9 @@ RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 	zerotexture.loadFromImage(zeroimage);
 	crossimage.loadFromFile("clover.png");
 	crosstexture.loadFromImage(crossimage);
-
 	Sprite crosssprite, crosssprite2, crosssprite3, crosssprite4, crosssprite5, crosssprite6, crosssprite7, crosssprite8, crosssprite9;
 	Sprite zerosprite, zerosprite2, zerosprite3, zerosprite4, zerosprite5, zerosprite6, zerosprite7, zerosprite8, zerosprite9;
-	///////////////ТЕКСТ///////////////
+	/////////////ТЕКСТ///////////////
 	Font font;
 	font.loadFromFile("CyrilicOld.ttf");
 	Text text3("", font, 40);
@@ -221,6 +222,7 @@ RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 	text1.setStyle(Text::Bold);
 	text1.setString("Очистить");
 	text1.setPosition(720, 215);
+	font.loadFromFile("CyrilicOld.ttf");
 	Text string2("", font, 100);
 	string2.setColor(Color::White);
 	string2.setStyle(Text::Bold);
@@ -244,19 +246,19 @@ RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
 								if (pole[0][0] == 0) {
 									pole[0][0] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y
 								if (pole[1][0] == 0) {
 									pole[1][0] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
 								if (pole[2][0] == 0) {
 									pole[2][0] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 						}
@@ -264,19 +266,19 @@ RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
 								if (pole[0][1] == 0) {
 									pole[0][1] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y
 								if (pole[1][1] == 0) {
 									pole[1][1] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
 								if (pole[2][1] == 0) {
 									pole[2][1] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 						}
@@ -284,25 +286,25 @@ RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
 							if (60 < pixelPos.y && pixelPos.y < 250) {//1 проверка по y
 								if (pole[0][2] == 0) {
 									pole[0][2] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450) {//2 проверка по y 
 								if (pole[1][2] == 0) {
 									pole[1][2] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650) {//3 проверка по y
 								if (pole[2][2] == 0) {
 									pole[2][2] = cross;
-									bot(pole, X, Y, zero, cross);
+									setting_noughts_and_crosses(pole, X, Y, zero, cross);
 								}
 							}
 						}
 				}
 			}
-			///////////////ДЕЙСТВИЯ КНОПОК///////////////
+			/////////////ДЕЙСТВИЯ КНОПОК///////////////
 			if (event.type == Event::MouseButtonPressed)
 				if (event.key.code == Mouse::Left) {
 					if (button3.getGlobalBounds().contains(pixelPos.x, pixelPos.y)) {

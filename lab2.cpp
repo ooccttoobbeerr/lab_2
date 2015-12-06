@@ -260,7 +260,7 @@ int main()
 	bool you_loss = false;
 	int pole[3][3] = { { 0,0,0 },{ 0, 0, 0 },{ 0, 0, 0 } };
 	int i, X, Y, x, y;
-	i = 0;
+	i = 0, X = 0, Y = 0;
 	int cross = 1, zero = 2;
 
 	while (window.isOpen()) {

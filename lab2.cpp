@@ -52,90 +52,91 @@ void is_victory(int pole[3][3], bool & result, int is_cross) {//Проверка
 	}
 }
 
-void bot(int pole[3][3], int y, int x, int nolik, int krest){
-	int  s = 0, r = 0, n = 0;
+void bot(int pole[3][3], int y, int x, int zero, int cross){
+	int  quantity = 0;
 	//Кoличество крестиков на поле
 	for (y = 0; y < 3; y++){
 		for (x = 0; x < 3; x++){
-			if (pole[y][x] == krest){
-				s++;
+			if (pole[y][x] == cross){
+				quantity++;
 			}
 		}
 	}
 	//Сколько крестиков, такой и ход
-	if (s == 1){
-		if (pole[1][1] != krest){
-			pole[1][1] = nolik;
+	if (quantity == 1){
+		if (pole[1][1] != cross){
+			pole[1][1] = zero;
 		}
 		else{
-			pole[0][0] = nolik;
+			pole[0][0] = zero;
 		}
 	}
-	if (s > 1 && s < 6){
+	if (quantity > 1 && quantity < 6){
 		for (y = 0; y < 3; y++){//Строки
-			if (pole[y][0] == krest && pole[y][1] == krest){
-				pole[y][2] = nolik;
+			if (pole[y][0] == cross && pole[y][1] == cross){
+				pole[y][2] = zero;
 			}
-			else if (pole[y][1] == krest && pole[y][2] == krest){
-				pole[y][0] = nolik;
+			else if (pole[y][1] == cross && pole[y][2] == cross){
+				pole[y][0] = zero;
 			}
-			else if (pole[y][0] == krest && pole[y][2] == krest){
-				pole[y][1] = nolik;
+			else if (pole[y][0] == cross && pole[y][2] == cross){
+				pole[y][1] = zero;
 			}
 		}
 		for (x = 0; x < 3; x++){//Столбцы
-			if (pole[0][x] == krest && pole[1][x] == krest){
-				pole[2][x] = nolik;
+			if (pole[0][x] == cross && pole[1][x] == cross){
+				pole[2][x] = zero;
 			}
-			else if (pole[1][x] == krest && pole[2][x] == krest){
-				pole[0][x] = nolik;
+			else if (pole[1][x] == cross && pole[2][x] == cross){
+				pole[0][x] = zero;
 			}
-			else if (pole[0][x] == krest && pole[2][x] == krest){
-				pole[1][x] = nolik;
+			else if (pole[0][x] == cross && pole[2][x] == cross){
+				pole[1][x] = zero;
 			}
 		}
-		if (pole[1][1] == nolik){//Частные случаи
-			if (pole[0][1] == krest && pole[1][2] == krest && pole[0][2] == 0){
-				pole[0][2] = nolik;
+		if (pole[1][1] == zero){//Частные случаи
+			if (pole[0][1] == cross && pole[1][2] == cross && pole[0][2] == 0){
+				pole[0][2] = zero;
 			}
-			else if (pole[2][1] == krest && pole[1][2] == krest && pole[2][2] == 0){
-				pole[2][2] = nolik;
+			else if (pole[2][1] == cross && pole[1][2] == cross && pole[2][2] == 0){
+				pole[2][2] = zero;
 			}
-			else if (pole[2][1] == krest && pole[1][0] == krest && pole[2][0] == 0){
-				pole[2][0] = nolik;
+			else if (pole[2][1] == cross && pole[1][0] == cross && pole[2][0] == 0){
+				pole[2][0] = zero;
 			}
-			else if (pole[0][1] == krest && pole[1][0] == krest && pole[0][0] == 0){
-				pole[0][0] = nolik;
+			else if (pole[0][1] == cross && pole[1][0] == cross && pole[0][0] == 0){
+				pole[0][0] = zero;
 			}
-			else if (pole[2][0] == krest && pole[0][2] == krest && pole[2][1] == 0){
-				pole[0][1] = nolik;
+			else if (pole[2][0] == cross && pole[0][2] == cross && pole[2][1] == 0){
+				pole[0][1] = zero;
 			}
-			else if (pole[0][0] == krest && pole[2][2] == krest && pole[1][2] == 0){
-				pole[1][0] = nolik;
+			else if (pole[0][0] == cross && pole[2][2] == cross && pole[1][2] == 0){
+				pole[1][0] = zero;
 			}
-			else if (pole[0][1] == krest && pole[2][1] == krest && pole[2][0] == 0){
-				pole[0][2] = nolik;
+			else if (pole[0][1] == cross && pole[2][1] == cross && pole[2][0] == 0){
+				pole[0][2] = zero;
 			}
-			else if (pole[1][0] == krest && pole[1][2] == krest && pole[0][0] == 0){
-				pole[2][2] = nolik;
+			else if (pole[1][0] == cross && pole[1][2] == cross && pole[0][0] == 0){
+				pole[2][2] = zero;
 			}
 		}
 
 		else{
-			if (pole[0][2] == krest || pole[2][2] == krest){//Частные случаи
+			if (pole[0][2] == cross || pole[2][2] == cross){//Частные случаи
 				if (pole[2][0] != 0){
-					pole[0][0] = nolik;
+					pole[0][0] = zero;
 				}
 				else{
-					pole[2][0] = nolik;
+					pole[2][0] = zero;
 				}
 			}
-			else if (pole[2][0] == krest){
-				pole[0][2] = nolik;
+			else if (pole[2][0] == cross){
+				pole[0][2] = zero;
 			}
 		}
 	}
 }
+
 
 int main()
 {
@@ -258,9 +259,9 @@ int main()
 	bool you_win = false;
 	bool you_loss = false;
 	int pole[3][3] = { { 0,0,0 },{ 0, 0, 0 },{ 0, 0, 0 } };
-	int i, k, o, p, n;
-	i = 0, o = 0, p = 0, n = 0;
-	int krest = 1, nolik = 2;
+	int i, k, X, Y;
+	i = 0;
+	int cross = 1, zero = 2;
 
 	while (window.isOpen()){
 		Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсорa
@@ -271,64 +272,65 @@ int main()
 			///////////////ВЫВОД НОЛИКОВ И КРЕСТИКОВ В КВАДРАТИКИ///////////////
 			if (event.type == sf::Event::MouseButtonReleased){
 				if (event.key.code == sf::Mouse::Left){
+					conclusion_noughts_and_crosses(pole, x, y, zero, cross)
 					if (60 < pixelPos.x && pixelPos.x < 650 && 60 < pixelPos.y && pixelPos.y < 650)//Работа в игровом поле
 						if (60 < pixelPos.x && pixelPos.x < 250){//1 проверка по x
 							if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
 								if (pole[0][0] == 0){
-									pole[0][0] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[0][0] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y
 								if (pole[1][0] == 0){
-									pole[1][0] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[1][0] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
 								if (pole[2][0] == 0){
-									pole[2][0] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[2][0] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 						}
 						else if (260 < pixelPos.x && pixelPos.x < 450){//2 проверка по x
 							if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
 								if (pole[0][1] == 0){
-									pole[0][1] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[0][1] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y
 								if (pole[1][1] == 0){
-									pole[1][1] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[1][1] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
 								if (pole[2][1] == 0){
-									pole[2][1] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[2][1] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 						}
 						else if (460 < pixelPos.x && pixelPos.x < 650){//3 проверка по x
 							if (60 < pixelPos.y && pixelPos.y < 250){//1 проверка по y
 								if (pole[0][2] == 0){
-									pole[0][2] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[0][2] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (260 < pixelPos.y && pixelPos.y < 450){//2 проверка по y 
 								if (pole[1][2] == 0){
-									pole[1][2] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[1][2] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 							else if (460 < pixelPos.y && pixelPos.y < 650){//3 проверка по y
 								if (pole[2][2] == 0){
-									pole[2][2] = krest;
-									bot(pole, o, p, nolik, krest);
+									pole[2][2] = cross;
+									bot(pole, X, Y, zero, cross);
 								}
 							}
 						}
@@ -350,8 +352,8 @@ int main()
 					}
 				}
 		}
-		is_victory(pole, you_win, krest);//Победа крестиков
-		is_victory(pole, you_loss, nolik);//Победа ноликов
+		is_victory(pole, you_win, cross);//Победа крестиков
+		is_victory(pole, you_loss, zero);//Победа ноликов
 		window.clear();
 		window.draw(fon);
 		window.draw(cell1);

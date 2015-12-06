@@ -1,8 +1,39 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
+
 //Kirienko Tatiana PS_22
+
 using namespace sf;//включаем пространство имен sf, чтобы постоянно не писать sf::
+
+struct GraphicResource {
+	Image* image;
+	Texture* texture;
+	Sprite* sprite;
+};
+
+GraphicResource make_the_sprite(String file_name) {
+	GraphicResource graphic_resource;
+	graphic_resource.image = new Image();
+	graphic_resource.texture = new Texture();
+	graphic_resource.sprite = new Sprite();
+	graphic_resource.image->loadFromFile(file_name);
+	graphic_resource.texture->loadFromImage(*graphic_resource.image);
+	graphic_resource.sprite->setTexture(*graphic_resource.texture);
+	return graphic_resource;
+}
+
+void clean_the_memory(GraphicResource & graphic_resource) {
+	delete graphic_resource.image;
+	delete graphic_resource.texture;
+	delete graphic_resource.sprite;
+}
+
+void draw_the_sprite(RenderWindow & window, Sprite & sprite, int i, int j, int sprite_width, int sprite_heigh, float x, float y) {
+	sprite.setTextureRect(IntRect(i, j, sprite_width, sprite_heigh));//рисуем 
+	sprite.setPosition(x, y);//задаем начальные координаты появления спрайта
+	window.draw(sprite);
+}
 
 void is_victory(int pole[3][3], bool & result, int is_cross) {//Проверка на победу
 	int x;
@@ -50,7 +81,7 @@ void is_victory(int pole[3][3], bool & result, int is_cross) {//Проверка
 	}
 }
 
-double count_crosses(int pole[3][3], int x, int y, int cross) {
+int count_crosses(int pole[3][3], int x, int y, int cross) {
 	int  quantity = 0;
 	for (y = 0; y < 3; y++) {
 		for (x = 0; x < 3; x++) {
@@ -143,94 +174,77 @@ void setting_noughts_and_crosses(int pole[3][3], int y, int x, int zero, int cro
 	}
 }
 
-int main()
-{
-	RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
-	///////////////ФОН///////////////
-	Image fonimage;
-	fonimage.loadFromFile("2.jpg");
-	Texture fontexture;
-	fontexture.loadFromImage(fonimage);
-	Sprite fon;
-	fon.setTexture(fontexture);
-	fon.setTextureRect(IntRect(0, 0, 970, 670));
-	fon.setPosition(0, 0);
-	///////////////КВАДРАТИКИ///////////////
-	Image heroimage;
-	heroimage.loadFromFile("3.png");
-	Texture herotexture;
-	herotexture.loadFromImage(heroimage);
-	Sprite cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9;
-	cell1.setTexture(herotexture);
-	cell1.setTextureRect(IntRect(0, 0, 190, 190));
-	cell1.setPosition(60, 60);
-	cell2.setTexture(herotexture);
-	cell2.setTextureRect(IntRect(0, 0, 190, 190));
-	cell2.setPosition(60, 260);
-	cell3.setTexture(herotexture);
-	cell3.setTextureRect(IntRect(0, 0, 190, 190));
-	cell3.setPosition(60, 460);
-	cell4.setTexture(herotexture);
-	cell4.setTextureRect(IntRect(0, 0, 190, 190));
-	cell4.setPosition(260, 60);
-	cell5.setTexture(herotexture);
-	cell5.setTextureRect(IntRect(0, 0, 190, 190));
-	cell5.setPosition(260, 260);
-	cell6.setTexture(herotexture);
-	cell6.setTextureRect(IntRect(0, 0, 190, 190));
-	cell6.setPosition(260, 460);
-	cell7.setTexture(herotexture);
-	cell7.setTextureRect(IntRect(0, 0, 190, 190));
-	cell7.setPosition(460, 60);
-	cell8.setTexture(herotexture);
-	cell8.setTextureRect(IntRect(0, 0, 190, 190));
-	cell8.setPosition(460, 260);
-	cell9.setTexture(herotexture);
-	cell9.setTextureRect(IntRect(0, 0, 190, 190));
-	cell9.setPosition(460, 460);
-	///////////////КНОПКИ///////////////
-	Image button;
-	button.loadFromFile("Button.png");
-	Texture buttontexture;
-	buttontexture.loadFromImage(button);
-	Sprite button1, button3;
-	button1.setTexture(buttontexture);
-	button1.setTextureRect(IntRect(0, 0, 220, 70));
-	button1.setPosition(700, 210);
-	button3.setTexture(buttontexture);
-	button3.setTextureRect(IntRect(0, 0, 220, 70));
-	button3.setPosition(700, 290);
-	///////////////НОЛИКИ И КРЕСТИКИ///////////////
-	Image zeroimage, crossimage;
-	Texture zerotexture, crosstexture;
-	zeroimage.loadFromFile("1.png");
-	zerotexture.loadFromImage(zeroimage);
-	crossimage.loadFromFile("clover.png");
-	crosstexture.loadFromImage(crossimage);
-	Sprite crosssprite, crosssprite2, crosssprite3, crosssprite4, crosssprite5, crosssprite6, crosssprite7, crosssprite8, crosssprite9;
-	Sprite zerosprite, zerosprite2, zerosprite3, zerosprite4, zerosprite5, zerosprite6, zerosprite7, zerosprite8, zerosprite9;
-	/////////////ТЕКСТ///////////////
-	Font font;
-	font.loadFromFile("CyrilicOld.ttf");
-	Text text3("", font, 40);
-	text3.setColor(Color::White);
-	text3.setStyle(Text::Bold);
-	text3.setString("Выход");
-	text3.setPosition(735, 295);
-	Text text1("", font, 40);
-	text1.setColor(Color::White);
-	text1.setStyle(Text::Bold);
-	text1.setString("Очистить");
-	text1.setPosition(720, 215);
-	font.loadFromFile("CyrilicOld.ttf");
-	Text string2("", font, 100);
-	string2.setColor(Color::White);
-	string2.setStyle(Text::Bold);
-	string2.setPosition(70, 250);
+void draw_window(RenderWindow &window, int pole[3][3],GraphicResource &squareimage, GraphicResource &fonimage, GraphicResource &zeroimage, GraphicResource &crossimage) {
+	draw_the_sprite(window, *fonimage.sprite, 0, 0, 970, 670, 0, 0);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 60, 60);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 60, 260);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 60, 460);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 260, 60);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 260, 260);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 260, 460);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 460, 60);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 460, 260);
+	draw_the_sprite(window, *squareimage.sprite, 0, 0, 190, 190, 460, 460);
+	if (pole[0][0] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 60, 60);
+	}
+	else if (pole[0][0] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 60, 60);
+	}
+	if (pole[1][0] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 60, 260);
+	}
+	else if (pole[1][0] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 60, 260);
+	}
+	if (pole[2][0] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 60, 460);
+	}
+	else if (pole[2][0] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 60, 460);
+	}
+	if (pole[0][1] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 260, 60);
+	}
+	else if (pole[0][1] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 260, 60);
+	}
+	if (pole[1][1] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 260, 260);
+	}
+	else if (pole[1][1] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 260, 260);
+	}
+	if (pole[2][1] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 260, 460);
+	}
+	else if (pole[2][1] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 260, 460);
+	}
+	if (pole[0][2] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 460, 60);
+	}
+	else if (pole[0][2] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 460, 60);
+	}
+	if (pole[1][2] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 460, 260);
+	}
+	else if (pole[1][2] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 460, 260);
+	}
+	if (pole[2][2] == 1) {
+		draw_the_sprite(window, *crossimage.sprite, 0, 0, 190, 190, 460, 460);
+	}
+	else if (pole[2][2] == 2) {
+		draw_the_sprite(window, *zeroimage.sprite, 0, 0, 190, 190, 460, 460);
+	}
+}
 
+void game(RenderWindow &window, GraphicResource &squareimage, GraphicResource &fonimage, GraphicResource &zeroimage, GraphicResource &crossimage, Sprite &button1, Sprite &button3, Text text1, Text text3, Text string2) {
 	bool isMove = false, cross_move = true, victory = false, you_win = false, you_loss = false;
 	int pole[3][3] = { { 0,0,0 },{ 0, 0, 0 },{ 0, 0, 0 } };
-	int i = 0, X = 0, Y = 0, x, y, cross = 1, zero = 2;
+	int i = 0, X = 0, Y = 0, cross = 1, zero = 2;
 
 	while (window.isOpen()) {
 		Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсорa
@@ -238,7 +252,6 @@ int main()
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
-			///////////////ВЫВОД НОЛИКОВ И КРЕСТИКОВ В КВАДРАТИКИ///////////////
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (event.key.code == sf::Mouse::Left) {
 					if (60 < pixelPos.x && pixelPos.x < 650 && 60 < pixelPos.y && pixelPos.y < 650)//Работа в игровом поле
@@ -304,147 +317,28 @@ int main()
 						}
 				}
 			}
-			/////////////ДЕЙСТВИЯ КНОПОК///////////////
 			if (event.type == Event::MouseButtonPressed)
 				if (event.key.code == Mouse::Left) {
-					if (button3.getGlobalBounds().contains(pixelPos.x, pixelPos.y)) {
+					if (button3.getGlobalBounds().contains(float (pixelPos.x), float (pixelPos.y))) {
 						std::cout << "isClicked!\n";
 						isMove = true;
 						window.close();
 					}
-					if (button1.getGlobalBounds().contains(pixelPos.x, pixelPos.y)) {
+					if (button1.getGlobalBounds().contains(float (pixelPos.x), float (pixelPos.y))) {
 						std::cout << "isClicked!\n";
 						isMove = true;
-						window.close();
-						main();
+						game(window, squareimage, fonimage, zeroimage, crossimage, button1, button3, text1, text3, string2);
 					}
 				}
 		}
 		is_victory(pole, you_win, cross);//Победа крестиков
 		is_victory(pole, you_loss, zero);//Победа ноликов
 		window.clear();
-		window.draw(fon);
-		window.draw(cell1);
-		window.draw(cell2);
-		window.draw(cell3);
-		window.draw(cell4);
-		window.draw(cell5);
-		window.draw(cell6);
-		window.draw(cell7);
-		window.draw(cell8);
-		window.draw(cell9);
-		window.draw(button1);
-		window.draw(button3);
+		draw_window(window, pole, squareimage, fonimage, zeroimage, crossimage);
+		draw_the_sprite(window, button1, 0, 0, 220, 70, 700, 210);
+		draw_the_sprite(window, button3, 0, 0, 220, 70, 700, 290);
 		window.draw(text1);
 		window.draw(text3);
-		if (pole[0][0] == 1) {
-			crosssprite.setTexture(crosstexture);
-			crosssprite.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite.setPosition(60, 60);
-			window.draw(crosssprite);
-		}
-		else if (pole[0][0] == 2) {
-			zerosprite.setTexture(zerotexture);
-			zerosprite.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite.setPosition(60, 60);
-			window.draw(zerosprite);
-		}
-		if (pole[1][0] == 1) {
-			crosssprite2.setTexture(crosstexture);
-			crosssprite2.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite2.setPosition(60, 260);
-			window.draw(crosssprite2);
-		}
-		else if (pole[1][0] == 2) {
-			zerosprite2.setTexture(zerotexture);
-			zerosprite2.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite2.setPosition(60, 260);
-			window.draw(zerosprite2);
-		}
-		if (pole[2][0] == 1) {
-			crosssprite3.setTexture(crosstexture);
-			crosssprite3.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite3.setPosition(60, 460);
-			window.draw(crosssprite3);
-		}
-		else if (pole[2][0] == 2) {
-			zerosprite3.setTexture(zerotexture);
-			zerosprite3.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite3.setPosition(60, 460);
-			window.draw(zerosprite3);
-		}
-		if (pole[0][1] == 1) {
-			crosssprite4.setTexture(crosstexture);
-			crosssprite4.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite4.setPosition(260, 60);
-			window.draw(crosssprite4);
-		}
-		else if (pole[0][1] == 2) {
-			zerosprite4.setTexture(zerotexture);
-			zerosprite4.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite4.setPosition(260, 60);
-			window.draw(zerosprite4);
-		}
-		if (pole[1][1] == 1) {
-			crosssprite5.setTexture(crosstexture);
-			crosssprite5.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite5.setPosition(260, 260);
-			window.draw(crosssprite5);
-		}
-		else if (pole[1][1] == 2) {
-			zerosprite5.setTexture(zerotexture);
-			zerosprite5.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite5.setPosition(260, 260);
-			window.draw(zerosprite5);
-		}
-		if (pole[2][1] == 1) {
-			crosssprite6.setTexture(crosstexture);
-			crosssprite6.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite6.setPosition(260, 460);
-			window.draw(crosssprite6);
-		}
-		else if (pole[2][1] == 2) {
-			zerosprite6.setTexture(zerotexture);
-			zerosprite6.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite6.setPosition(260, 460);
-			window.draw(zerosprite6);
-		}
-		if (pole[0][2] == 1) {
-			crosssprite7.setTexture(crosstexture);
-			crosssprite7.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite7.setPosition(460, 60);
-			window.draw(crosssprite7);
-		}
-		else if (pole[0][2] == 2) {
-			zerosprite7.setTexture(zerotexture);
-			zerosprite7.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite7.setPosition(460, 60);
-			window.draw(zerosprite7);
-		}
-		if (pole[1][2] == 1) {
-			crosssprite8.setTexture(crosstexture);
-			crosssprite8.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite8.setPosition(460, 260);
-			window.draw(crosssprite8);
-		}
-		else if (pole[1][2] == 2) {
-			zerosprite8.setTexture(zerotexture);
-			zerosprite8.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite8.setPosition(460, 260);
-			window.draw(zerosprite8);
-		}
-		if (pole[2][2] == 1) {
-			crosssprite9.setTexture(crosstexture);
-			crosssprite9.setTextureRect(IntRect(0, 0, 190, 190));
-			crosssprite9.setPosition(460, 460);
-			window.draw(crosssprite9);
-		}
-		else if (pole[2][2] == 2) {
-			zerosprite9.setTexture(zerotexture);
-			zerosprite9.setTextureRect(IntRect(0, 0, 190, 190));
-			zerosprite9.setPosition(460, 460);
-			window.draw(zerosprite9);
-		}
 		if (you_win) {
 			string2.setString("Ты победил!\n");
 			window.draw(string2);
@@ -461,5 +355,42 @@ int main()
 		}
 		window.display();
 	}
+}
+
+int main()
+{
+	RenderWindow window(VideoMode(970, 670), "tic-tac-toe");
+	GraphicResource fonimage = make_the_sprite("2.jpg");
+	GraphicResource squareimage = make_the_sprite("3.png");
+	GraphicResource button = make_the_sprite("Button.png");
+	GraphicResource zeroimage = make_the_sprite("1.png");
+	GraphicResource crossimage = make_the_sprite("clover.png");
+	Sprite button1 = *button.sprite;
+	Sprite button3 = *button.sprite;
+	Font font;
+	font.loadFromFile("CyrilicOld.ttf");
+	Text text3("", font, 40);
+	text3.setColor(Color::White);
+	text3.setStyle(Text::Bold);
+	text3.setString("Выход");
+	text3.setPosition(735, 295);
+	Text text1("", font, 40);
+	text1.setColor(Color::White);
+	text1.setStyle(Text::Bold);
+	text1.setString("Очистить");
+	text1.setPosition(720, 215);
+	font.loadFromFile("CyrilicOld.ttf");
+	Text string2("", font, 100);
+	string2.setColor(Color::White);
+	string2.setStyle(Text::Bold);
+	string2.setPosition(70, 250);
+
+	game(window, squareimage, fonimage, zeroimage, crossimage, button1, button3, text1, text3, string2);
+
+	clean_the_memory(zeroimage);
+	clean_the_memory(crossimage);
+	clean_the_memory(button);
+	clean_the_memory(squareimage);
+	clean_the_memory(fonimage);
 	return 0;
 }
